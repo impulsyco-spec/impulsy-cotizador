@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico STHETIC CONTROL — Impulsy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════
+       DESIGN TOKENS — Plan de Colores Impulsy
+    ══════════════════════════════════════ */
+    :root {
+      --primary-blue:       #2563EB;
+      --primary-blue-soft:  #3B82F6;
+      --primary-blue-pale:  #EFF6FF;
+      --background-main:    #FFFFFF;
+      --background-soft:    #F9FAFB;
+      --text-main:          #111827;
+      --text-secondary:     #6B7280;
+      --text-light:         #9CA3AF;
+      --accent-yellow:      #FACC15;
+      --accent-yellow-soft: #FEF9C3;
+      --input-bg:           #F3F4F6;
+      --input-border:       #E5E7EB;
+      --danger-red:         #EF4444;
+      --danger-red-dark:    #DC2626;
+      --danger-red-bg:      #FEF2F2;
+      --danger-red-border:  #FECACA;
+      --success-green:      #22C55E;
+      --success-green-dark: #16A34A;
+      --border:             #E5E7EB;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:  0 4px 16px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.05);
+      --shadow-lg:  0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
+      --radius:     12px;
+      --radius-lg:  18px;
+      --radius-xl:  24px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--background-main);
+      color: var(--text-main);
+      height: 100%;
+      overflow: hidden;
+      line-height: 1.5;
+    }
+
+    /* ══════════════════════════════════════
+       INTRO — Confianza + Claridad
+    ══════════════════════════════════════ */
+    #screen-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+      background: var(--background-main);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      overflow-y: auto;
+    }
+    #screen-intro.exit {
+      opacity: 0;
+      transform: translateY(-24px);
+      pointer-events: none;
+    }
+
+    .intro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--primary-blue-pale);
+      border: 1px solid #BFDBFE;
+      color: var(--primary-blue);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+    .intro-title {
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 18px;
+    }
+    .intro-title .highlight { color: var(--primary-blue); }
+    .intro-sub {
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    /* ── TRM Section ── */
+    .trm-section {
+      width: 100%;
+      max-width: 360px;
+      background: var(--background-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .trm-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--primary-blue);
+      margin-bottom: 10px;
+    }
+    .trm-input-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--background-main);
+      border: 2px solid var(--input-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .trm-input-wrap:focus-within {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+    }
+    .trm-prefix {
+      padding: 0 10px 0 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .trm-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      padding: 14px 8px;
+      -moz-appearance: textfield;
+    }
+    .trm-input::-webkit-outer-spin-button,
+    .trm-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .trm-suffix {
+      padding: 0 16px 0 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-light);
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
+    }
+    .trm-note {
+      font-size: 0.73rem;
+      color: var(--text-light);
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .trm-error {
+      font-size: 0.78rem;
+      color: var(--danger-red-dark);
+      margin-top: 6px;
+      min-height: 18px;
+    }
+    .trm-input-wrap.error {
+      border-color: var(--danger-red);
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.1);
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: none;
+      cursor: pointer;
+      padding: 16px 44px;
+      border-radius: 100px;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .btn-primary:hover {
+      background: var(--primary-blue-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+    }
+    .intro-note {
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    /* ── COUNTRY SELECTOR ── */
+    .country-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+    .country-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 2px solid var(--input-border);
+      border-radius: 100px;
+      background: var(--background-soft);
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .country-btn:hover {
+      border-color: var(--border);
+      background: #f0f0f0;
+    }
+    .country-btn.active {
+      border-color: var(--primary-blue);
+      background: var(--primary-blue-pale);
+      color: var(--primary-blue);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.1);
+    }
+    .country-flag { font-size: 1.2rem; }
+
+    /* Trust badges */
+    .trust-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .trust-item .t-icon {
+      width: 24px;
+      height: 24px;
+      background: #F0FDF4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--success-green-dark);
+      font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════
+       QUESTION SCREEN — Interacción cómoda
+    ══════════════════════════════════════ */
+    #screen-questions {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      flex-direction: column;
+      background: var(--background-main);
+    }
+
+    /* Progress bar */
+    .progress-bar-wrap {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--input-bg);
+      z-index: 20;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-soft));
+      width: 0%;
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* Step counter */
+    .step-counter {
+      position: absolute;
+      top: 20px; right: 24px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-light);
+      z-index: 20;
+    }
+
+    .question-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 110px;
+      position: relative;
+    }
+
+    .question-card {
+      max-width: 620px;
+      width: 100%;
+      position: absolute;
+      transition: opacity 0.38s ease, transform 0.38s ease;
+    }
+    .question-card.active       { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .question-card.hidden-below { opacity: 0; transform: translateY(52px); pointer-events: none; }
+    .question-card.hidden-above { opacity: 0; transform: translateY(-52px); pointer-events: none; }
+
+    .q-number {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .q-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .q-sub {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* Input */
+    .q-input-wrap {
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .q-prefix {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+    .q-input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 2px solid var(--input-border);
+      border-radius: var(--radius);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      padding: 20px 20px 20px 48px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    .q-input::-webkit-outer-spin-button,
+    .q-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .q-input.no-prefix { padding-left: 20px; }
+    .q-input:focus {
+      border-color: var(--accent-yellow);
+      background: var(--accent-yellow-soft);
+      box-shadow: 0 0 0 4px rgba(250,204,21,0.15);
+    }
+    .q-input:focus + .q-prefix,
+    .q-input-wrap:focus-within .q-prefix {
+      color: var(--text-main);
+    }
+    .q-input.error {
+      border-color: var(--danger-red);
+      background: var(--danger-red-bg);
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.1);
+    }
+    .q-error {
+      font-size: 0.82rem;
+      color: var(--danger-red-dark);
+      min-height: 20px;
+      margin-bottom: 20px;
+      padding-left: 2px;
+    }
+
+    .q-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .btn-next {
+      background: var(--primary-blue);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      padding: 14px 32px;
+      border-radius: 100px;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-next:hover {
+      background: var(--primary-blue-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37,99,235,0.35);
+    }
+    .btn-next .arrow { transition: transform 0.2s; }
+    .btn-next:hover .arrow { transform: translateX(4px); }
+    .btn-hint {
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+
+    .btn-back {
+      position: absolute;
+      bottom: 32px; left: 24px;
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .btn-back:hover { color: var(--text-main); background: var(--input-bg); }
+
+    /* ══════════════════════════════════════
+       LOADING SCREEN
+    ══════════════════════════════════════ */
+    #screen-loading {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      background: var(--background-main);
+    }
+
+    .loader-ring {
+      width: 64px;
+      height: 64px;
+      border: 3px solid var(--input-border);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+      margin-bottom: 36px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loader-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--primary-blue);
+      margin-bottom: 14px;
+    }
+    .loader-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .loader-sub {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      max-width: 360px;
+      line-height: 1.6;
+      margin-bottom: 44px;
+    }
+
+    .loader-steps { display: flex; flex-direction: column; gap: 12px; text-align: left; min-width: 260px; }
+    .loader-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: var(--text-light);
+      transition: color 0.35s ease;
+    }
+    .loader-step.done { color: var(--text-main); }
+    .step-dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      flex-shrink: 0;
+      transition: all 0.35s ease;
+      background: var(--background-main);
+    }
+    .loader-step.done .step-dot {
+      background: var(--success-green);
+      border-color: var(--success-green);
+      color: #fff;
+      font-weight: 700;
+    }
+    .loader-step.active .step-dot {
+      border-color: var(--primary-blue);
+      animation: pulse-dot 1s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.35); }
+      50%       { box-shadow: 0 0 0 6px rgba(37,99,235,0); }
+    }
+
+    /* ══════════════════════════════════════
+       RESULTS SCREEN — Impacto máximo
+    ══════════════════════════════════════ */
+    #screen-results {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      overflow-y: auto;
+      background: var(--background-soft);
+    }
+    #screen-results.visible {
+      display: block;
+      animation: fadeUp 0.55s ease forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .results-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 268px;
+      gap: 0 28px;
+      align-items: start;
+    }
+    .results-header { grid-column: 1 / -1; }
+    .results-sidebar { grid-column: 2; grid-row: 2 / 20; position: sticky; top: 28px; }
+    .results-main   { grid-column: 1; }
+
+    /* Results header */
+    .results-header {
+      padding: 56px 0 36px;
+      text-align: center;
+    }
+    .results-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--danger-red-bg);
+      border: 1px solid var(--danger-red-border);
+      color: var(--danger-red-dark);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 22px;
+    }
+    .results-main-title {
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 14px;
+    }
+    .results-main-title .highlight { color: var(--danger-red-dark); }
+    .results-main-sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Sidebar — resumen de datos */
+    .summary-card {
+      background: var(--background-main);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      box-shadow: var(--shadow-md);
+    }
+    .summary-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sc-icon {
+      width: 28px; height: 28px;
+      background: var(--primary-blue-pale);
+      border: 1px solid #BFDBFE;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .sc-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--primary-blue);
+    }
+    .summary-items { display: flex; flex-direction: column; gap: 8px; }
+    .summary-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--background-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .summary-item.trm-item {
+      background: var(--primary-blue-pale);
+      border-color: #BFDBFE;
+    }
+    .si-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.3;
+      flex: 1;
+    }
+    .summary-item.trm-item .si-label { color: var(--primary-blue); font-weight: 600; }
+    .si-value {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      text-align: right;
+    }
+    .summary-item.trm-item .si-value { color: var(--primary-blue); }
+    .si-unit {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--text-light);
+      display: block;
+      text-align: right;
+      margin-top: 1px;
+    }
+
+    /* Annual KPI — número grande rojo */
+    .annual-card {
+      background: var(--background-main);
+      border: 1px solid var(--danger-red-border);
+      border-top: 4px solid var(--danger-red-dark);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
+    }
+    .kpi-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--danger-red-dark);
+      margin-bottom: 10px;
+    }
+    .kpi-value {
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--danger-red-dark);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .kpi-sub { font-size: 0.88rem; color: var(--text-secondary); }
+
+    /* Monthly card */
+    .monthly-card {
+      background: var(--background-main);
+      border: 1px solid var(--danger-red-border);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .monthly-left { flex: 1; min-width: 180px; }
+    .monthly-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--danger-red-dark);
+      margin-bottom: 8px;
+    }
+    .monthly-value {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--danger-red-dark);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .monthly-sub { font-size: 0.82rem; color: var(--text-secondary); }
+    .monthly-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 200px;
+    }
+    .monthly-breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 14px;
+      background: var(--danger-red-bg);
+      border: 1px solid var(--danger-red-border);
+      border-radius: 8px;
+    }
+    .mb-label { font-size: 0.82rem; color: var(--text-secondary); }
+    .mb-value  { font-size: 1rem; font-weight: 800; color: var(--danger-red-dark); white-space: nowrap; }
+
+    .divider { height: 1px; background: var(--border); margin: 28px 0; }
+    #proposal-module { display: none; margin-top: 40px; }
+    .divider-proposal { display: none; }
+
+    /* ── PERIOD SELECTOR ── */
+    .period-selector {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 24px auto 36px;
+      background: #eee;
+      padding: 4px;
+      border-radius: 100px;
+      width: fit-content;
+      border: 1px solid var(--border);
+    }
+    .period-btn {
+      padding: 10px 24px;
+      border: none;
+      background: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 100px;
+      transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+      white-space: nowrap;
+    }
+    .period-btn.active {
+      background: var(--background-main);
+      color: var(--primary-blue);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .discount-label {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--success-green);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+    .period-btn.active .discount-label { color: var(--success-green); }
+
+    /* ══════════════════════════════════════
+       PLAN ROI SECTION
+    ══════════════════════════════════════ */
+    .roi-section {
+      margin-bottom: 28px;
+    }
+    .roi-header {
+      margin-bottom: 20px;
+    }
+    .roi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-blue-pale);
+      border: 1px solid #BFDBFE;
+      color: var(--primary-blue);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .roi-title {
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .roi-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Plan cards grid */
+    .plan-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .plan-card {
+      background: var(--background-main);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 22px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .plan-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .plan-card.featured {
+      border-color: var(--primary-blue);
+      border-width: 2px;
+    }
+
+    .plan-recommended {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary-blue);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .plan-name-badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--background-soft);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .plan-card.featured .plan-name-badge {
+      background: var(--primary-blue-pale);
+      border-color: #BFDBFE;
+      color: var(--primary-blue);
+    }
+
+    .plan-price-usd {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .plan-price-usd span {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0;
+    }
+    .plan-price-cop {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .plan-roi-box {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .plan-roi-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--success-green-dark);
+      margin-bottom: 6px;
+    }
+    .plan-roi-number {
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--success-green-dark);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .plan-roi-desc {
+      font-size: 0.75rem;
+      color: #166534;
+      line-height: 1.4;
+    }
+
+    .plan-features-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+    .plan-features-list li {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    .plan-features-list li::before {
+      content: '✓';
+      color: var(--success-green-dark);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .plan-setup {
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .plan-setup-label { }
+    .plan-setup-price {
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    /* Add-on Acelerador */
+    .addon-card {
+      background: var(--background-main);
+      border: 1.5px dashed #A5B4FC;
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
+    }
+    .addon-card.selected {
+      border: 2px solid var(--primary-blue);
+      background: #F5F7FF;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1);
+    }
+    .addon-left { flex: 1; min-width: 200px; }
+    .btn-addon-toggle {
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-addon-toggle:hover { transform: scale(1.03); background: #1d4ed8; }
+    .addon-card.selected .btn-addon-toggle {
+      background: #EF4444;
+    }
+    .addon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #EEF2FF;
+      border: 1px solid #C7D2FE;
+      color: #4338CA;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 8px;
+    }
+    .addon-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .addon-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .addon-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .addon-price-usd {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #4338CA;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .addon-price-usd span { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+    .addon-roi {
+      font-size: 0.73rem;
+      color: var(--success-green-dark);
+      font-weight: 600;
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+    .addon-setup {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    /* Recepcionista note */
+    .recepcionista-note {
+      background: var(--background-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .recepcionista-note .rn-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .recepcionista-note strong { color: var(--text-main); }
+
+    /* CTA section */
+    .cta-section {
+      background: var(--background-main);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      margin-top: 28px;
+    }
+    .cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      color: var(--success-green-dark);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .cta-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text-main); margin-bottom: 10px; }
+    .cta-sub {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      max-width: 420px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+    .btn-cta {
+      background: var(--success-green);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.05rem;
+      border: none;
+      cursor: pointer;
+      padding: 18px 44px;
+      border-radius: 100px;
+      box-shadow: 0 6px 20px rgba(34,197,94,0.35);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .btn-cta:hover {
+      background: var(--success-green-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.4);
+    }
+    .cta-note { font-size: 0.78rem; color: var(--text-light); }
+
+    .btn-restart {
+      display: block;
+      margin: 28px auto 0;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 10px 26px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-restart:hover { border-color: var(--text-secondary); color: var(--text-main); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      .results-wrap { grid-template-columns: 1fr; }
+      .results-header { grid-column: 1; }
+      .results-sidebar { grid-column: 1; grid-row: auto; position: static; margin-bottom: 24px; }
+      .results-main   { grid-column: 1; }
+      .summary-items  { flex-direction: row; flex-wrap: wrap; }
+      .summary-item   { flex: 1; min-width: 140px; flex-direction: column; align-items: flex-start; gap: 4px; }
+      .si-value       { text-align: left; }
+      .si-unit        { text-align: left; }
+    }
+    @media (max-width: 620px) {
+      .plan-cards-grid { grid-template-columns: 1fr; }
+      .addon-card { flex-direction: column; }
+      .addon-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════
+     INTRO — Confianza
+═══════════════════════ -->
+<div id="screen-intro">
+  <div class="intro-badge">🔬 Diagnóstico · Impulsy</div>
+  <h1 class="intro-title">
+    ¿Cuánto dinero está<br>perdiendo tu centro<span class="highlight">?</span>
+  </h1>
+  <p class="intro-sub">
+    En 2 minutos te mostramos exactamente cuánto dinero y tiempo estás dejando ir cada mes por leads sin cerrar e inasistencias sin gestionar.
+  </p>
+
+  <!-- Country Selector -->
+  <div class="country-selector">
+    <button class="country-btn active" data-country="CO">
+      <span class="country-flag">🇨🇴</span> Colombia
+    </button>
+    <button class="country-btn" data-country="MX">
+      <span class="country-flag">🇲🇽</span> México
+    </button>
+  </div>
+
+  <!-- TRM Field -->
+  <div class="trm-section">
+    <div class="trm-label" id="trm-label">💱 TRM — Valor del dólar hoy</div>
+    <div class="trm-input-wrap" id="trm-wrap">
+      <span class="trm-prefix">$</span>
+      <input type="text" id="trm-input" class="trm-input" placeholder="4.200" inputmode="numeric" autocomplete="off" />
+      <span class="trm-suffix" id="trm-currency">COP</span>
+    </div>
+    <div class="trm-error" id="trm-error"></div>
+    <p class="trm-note" id="trm-note">El asesor completa este dato antes de iniciar la sesión</p>
+  </div>
+
+  <button class="btn-primary" id="btn-start">
+    Iniciar diagnóstico →
+  </button>
+  <p class="intro-note">5 preguntas · Sin datos personales · Resultado inmediato</p>
+  <div class="trust-row">
+    <div class="trust-item">
+      <div class="t-icon">✓</div>
+      <span>100% gratuito</span>
+    </div>
+    <div class="trust-item">
+      <div class="t-icon">✓</div>
+      <span>Sin registro</span>
+    </div>
+    <div class="trust-item">
+      <div class="t-icon">✓</div>
+      <span>Resultado inmediato</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+     PREGUNTAS — Interacción
+═══════════════════════ -->
+<div id="screen-questions">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <div class="step-counter" id="step-counter">1 / 5</div>
+
+  <div class="question-stage" id="question-stage">
+
+    <!-- Q1 -->
+    <div class="question-card hidden-below" data-index="0">
+      <div class="q-number">Pregunta 1 de 5</div>
+      <h2 class="q-title">¿Cuánto paga una clienta en promedio por visita?</h2>
+      <p class="q-sub">El valor promedio de un servicio en tu centro estético.</p>
+      <div class="q-input-wrap">
+        <span class="q-prefix">$</span>
+        <input type="text" class="q-input" id="q-ticket" placeholder="80.000" inputmode="numeric" autocomplete="off" />
+      </div>
+      <div class="q-error" id="err-ticket"></div>
+      <div class="q-actions">
+        <button class="btn-next" data-next="1">Siguiente <span class="arrow">→</span></button>
+        <span class="btn-hint">o presiona Enter ↵</span>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-card hidden-below" data-index="1">
+      <div class="q-number">Pregunta 2 de 5</div>
+      <h2 class="q-title">¿Cuántas conversaciones recibes al día?</h2>
+      <p class="q-sub">WhatsApp, DMs, llamadas — todas las personas que contactan al centro.</p>
+      <div class="q-input-wrap">
+        <input type="text" class="q-input no-prefix" id="q-conv" placeholder="30" inputmode="numeric" autocomplete="off" />
+      </div>
+      <div class="q-error" id="err-conv"></div>
+      <div class="q-actions">
+        <button class="btn-next" data-next="2">Siguiente <span class="arrow">→</span></button>
+        <span class="btn-hint">o presiona Enter ↵</span>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card hidden-below" data-index="2">
+      <div class="q-number">Pregunta 3 de 5</div>
+      <h2 class="q-title">¿Cuántas no cierran o dejan de responder?</h2>
+      <p class="q-sub">De esas conversaciones, cuántas se enfrían o no agendan cita.</p>
+      <div class="q-input-wrap">
+        <input type="text" class="q-input no-prefix" id="q-perdidos" placeholder="5" inputmode="numeric" autocomplete="off" />
+      </div>
+      <div class="q-error" id="err-perdidos"></div>
+      <div class="q-actions">
+        <button class="btn-next" data-next="3">Siguiente <span class="arrow">→</span></button>
+        <span class="btn-hint">o presiona Enter ↵</span>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card hidden-below" data-index="3">
+      <div class="q-number">Pregunta 4 de 5</div>
+      <h2 class="q-title">¿Cuántas citas agendadas no se presentan al día?</h2>
+      <p class="q-sub">Clientas que confirmaron pero no llegaron — sin cancelar ni reagendar.</p>
+      <div class="q-input-wrap">
+        <input type="text" class="q-input no-prefix" id="q-inas" placeholder="3" inputmode="numeric" autocomplete="off" />
+      </div>
+      <div class="q-error" id="err-inas"></div>
+      <div class="q-actions">
+        <button class="btn-next" data-next="4">Siguiente <span class="arrow">→</span></button>
+        <span class="btn-hint">o presiona Enter ↵</span>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card hidden-below" data-index="4">
+      <div class="q-number">Pregunta 5 de 5</div>
+      <h2 class="q-title">¿Cuántas horas al día gestionas mensajes y recordatorios?</h2>
+      <p class="q-sub">Tiempo respondiendo WhatsApp, enviando recordatorios, coordinando citas.</p>
+      <div class="q-input-wrap">
+        <input type="text" class="q-input no-prefix" id="q-horas" placeholder="3" inputmode="decimal" autocomplete="off" />
+      </div>
+      <div class="q-error" id="err-horas"></div>
+      <div class="q-actions">
+        <button class="btn-next" id="btn-final" data-next="done">Ver mi diagnóstico <span class="arrow">→</span></button>
+        <span class="btn-hint">o presiona Enter ↵</span>
+      </div>
+    </div>
+
+  </div>
+  <button class="btn-back" id="btn-back">← Anterior</button>
+</div>
+
+<!-- ═══════════════════════
+     LOADING
+═══════════════════════ -->
+<div id="screen-loading">
+  <div class="loader-ring"></div>
+  <div class="loader-label">Analizando tu negocio</div>
+  <h2 class="loader-title">Revisando tu<br>situación actual</h2>
+  <p class="loader-sub">Calculando pérdidas reales basadas en los datos de tu centro.</p>
+  <div class="loader-steps" id="loader-steps">
+    <div class="loader-step active" data-step="0"><div class="step-dot">✓</div><span>Procesando datos del centro</span></div>
+    <div class="loader-step" data-step="1"><div class="step-dot">✓</div><span>Calculando pérdida por leads</span></div>
+    <div class="loader-step" data-step="2"><div class="step-dot">✓</div><span>Calculando pérdida por inasistencias</span></div>
+    <div class="loader-step" data-step="3"><div class="step-dot">✓</div><span>Generando proyección anual</span></div>
+    <div class="loader-step" data-step="4"><div class="step-dot">✓</div><span>Preparando diagnóstico</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════
+     RESULTS — Impacto
+═══════════════════════ -->
+<div id="screen-results">
+  <div class="results-wrap">
+
+    <div class="results-header">
+      <div class="results-label">🚨 Diagnóstico completado</div>
+      <h1 class="results-main-title">
+        Esto es lo que tu centro<br>está <span class="highlight">perdiendo ahora mismo</span>
+      </h1>
+      <p class="results-main-sub">Basado en los datos que ingresaste. Cada día sin sistema, el costo sigue acumulándose.</p>
+    </div>
+
+    <!-- SIDEBAR sticky -->
+    <aside class="results-sidebar">
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <div class="sc-icon">📋</div>
+          <div class="sc-title">Datos de tu centro</div>
+        </div>
+        <div class="summary-items">
+          <div class="summary-item trm-item">
+            <div class="si-label">TRM hoy</div>
+            <div class="si-value" id="s-trm">—</div>
+          </div>
+          <div class="summary-item">
+            <div class="si-label">Ticket promedio</div>
+            <div class="si-value" id="s-ticket">—</div>
+          </div>
+          <div class="summary-item">
+            <div class="si-label">Conversaciones/día</div>
+            <div class="si-value" id="s-conv">—</div>
+          </div>
+          <div class="summary-item">
+            <div class="si-label">Leads sin cerrar/día</div>
+            <div class="si-value" id="s-perdidos">—</div>
+          </div>
+          <div class="summary-item">
+            <div class="si-label">Inasistencias/día</div>
+            <div class="si-value" id="s-inas">—</div>
+          </div>
+          <div class="summary-item">
+            <div class="si-label">Horas gestión/día</div>
+            <div class="si-value" id="s-horas">—</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="results-main">
+
+      <!-- Pérdida Anual — número más importante, primero -->
+      <div class="annual-card">
+        <div class="kpi-label">⚠ Pérdida Anual Estimada</div>
+        <div class="kpi-value" id="r-anual-dinero">$0</div>
+        <div class="kpi-sub">Lo que tu centro está dejando de facturar cada año</div>
+      </div>
+
+      <!-- Mensual -->
+      <div class="monthly-card">
+        <div class="monthly-left">
+          <div class="monthly-label">Pérdida mensual</div>
+          <div class="monthly-value" id="c-mensual">$0</div>
+          <div class="monthly-sub">Cada mes que pasa sin un sistema</div>
+        </div>
+        <div class="monthly-right">
+          <div class="monthly-breakdown-item">
+            <span class="mb-label">Por leads sin cerrar</span>
+            <span class="mb-value" id="c-leads">$0</span>
+          </div>
+          <div class="monthly-breakdown-item">
+            <span class="mb-label">Por inasistencias</span>
+            <span class="mb-value" id="c-inas">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- MÓDULO 2: PROPUESTA (OCULTO INICIALMENTE) -->
+      <div id="proposal-module">
+        <div class="divider divider-proposal"></div>
+        
+        <!-- ── PLAN ROI SECTION ── -->
+        <div class="roi-section">
+        <div class="roi-header">
+          <div class="roi-badge">🎯 Elige tu plan</div>
+          <h2 class="roi-title">¿Cuántas citas necesitas para recuperar la inversión?</h2>
+          <p class="roi-sub">Con tu ticket de <strong id="roi-ticket-ref">$—</strong>, así se vería tu retorno con STHETIC CONTROL.</p>
+        </div>
+
+        <!-- Period Selector -->
+        <div class="period-selector">
+          <button class="period-btn active" data-period="mensual">Mensual</button>
+          <button class="period-btn" data-period="trimestral">Trimestral <span class="discount-label">(-5%)</span></button>
+          <button class="period-btn" data-period="semestral">Semestral <span class="discount-label">(-10%)</span></button>
+          <button class="period-btn" data-period="anual">Anual <span class="discount-label">(-20%)</span></button>
+        </div>
+
+        <!-- CORE + FLOW -->
+        <div class="plan-cards-grid">
+
+          <!-- CORE -->
+          <div class="plan-card">
+            <div class="plan-name-badge">CORE</div>
+            <div class="plan-price-usd">$129 <span>USD / mes</span></div>
+            <div class="plan-price-cop" id="core-cop">≈ calculando...</div>
+            <div class="plan-roi-box">
+              <div class="plan-roi-label">Para recuperar la mensualidad</div>
+              <div class="plan-roi-number" id="core-roi">—</div>
+              <div class="plan-roi-desc">citas al mes son suficientes</div>
+            </div>
+            <ul class="plan-features-list">
+              <li>Plataforma GHL completa</li>
+              <li>Conexión WhatsApp QR</li>
+              <li>Recordatorios automáticos de citas</li>
+              <li>Reactivación de leads fríos</li>
+              <li>Usuarios y calendarios ilimitados</li>
+            </ul>
+            <div class="plan-setup">
+              <span class="plan-setup-label">Implementación</span>
+              <span class="plan-setup-price" id="setup-core">$400 USD</span>
+            </div>
+          </div>
+
+          <!-- FLOW -->
+          <div class="plan-card featured">
+            <div class="plan-recommended">⭐ Más completo</div>
+            <div class="plan-name-badge">FLOW</div>
+            <div class="plan-price-usd">$250 <span>USD / mes</span></div>
+            <div class="plan-price-cop" id="flow-cop">≈ calculando...</div>
+            <div class="plan-roi-box">
+              <div class="plan-roi-label">Para recuperar la mensualidad</div>
+              <div class="plan-roi-number" id="flow-roi">—</div>
+              <div class="plan-roi-desc">citas al mes son suficientes</div>
+            </div>
+            <ul class="plan-features-list">
+              <li>Todo lo del plan CORE</li>
+              <li>Automatizaciones avanzadas a medida</li>
+              <li>Campañas de reactivación masiva</li>
+              <li>Reportes y métricas avanzadas</li>
+              <li>Soporte prioritario</li>
+            </ul>
+            <div class="plan-setup">
+              <span class="plan-setup-label">Implementación</span>
+              <span class="plan-setup-price" id="setup-flow">$650 USD</span>
+            </div>
+          </div>
+
+        </div><!-- /plan-cards-grid -->
+
+        <!-- ADD-ON: Acelerador -->
+        <div class="addon-card" id="acel-card">
+          <div class="addon-left">
+            <div class="addon-badge" id="acel-badge">➕ Add-on opcional</div>
+            <div class="addon-name">Acelerador de Agenda con IA</div>
+            <div class="addon-desc">IA que responde y cierra leads las 24 horas · 1.000 conversaciones IA + 500 mensajes masivos incluidos</div>
+            <button class="btn-addon-toggle" id="btn-toggle-acel" style="margin-top: 14px;">➕ Adicionar al Plan</button>
+          </div>
+          <div class="addon-right">
+            <div class="addon-price-usd">$99 <span>USD / mes</span></div>
+            <div class="addon-roi" id="acelerador-roi">+ solo — citas más</div>
+            <div class="addon-setup" id="setup-acel">Implementación: $300 USD</div>
+          </div>
+        </div>
+
+        <!-- Recepcionista IA -->
+        <div class="recepcionista-note">
+          <span class="rn-icon">🤖</span>
+          <span><strong>Agente Recepcionista IA</strong> — Setup único de <strong>$1.500 USD</strong>. Disponible cuando el cliente necesita atención completamente automatizada. El asesor evalúa si aplica.</span>
+        </div>
+
+        </div><!-- /recepcionista-note -->
+
+      </div><!-- /proposal-module -->
+
+      <!-- CTA INICIAL (Diagnóstico) -->
+      <div class="cta-section" id="cta-initial">
+        <div class="cta-badge">✅ Próximo paso</div>
+        <h2 class="cta-title">Empecemos a recuperar ese dinero</h2>
+        <p class="cta-sub">Descubre cómo STHETIC CONTROL puede detener estas pérdidas y automatizar tu agenda.</p>
+        <button class="btn-cta" id="btn-show-plans">
+          🚀 Ver planes y recuperar mi inversión
+        </button>
+        <p class="cta-note">Te mostraremos el retorno de inversión detallado</p>
+      </div>
+
+      <!-- CTA FINAL (Propuesta) -->
+      <div class="cta-section" id="cta-final" style="display: none;">
+        <div class="cta-badge">✨ Propuesta lista</div>
+        <h2 class="cta-title">¡Es hora de tomar el control!</h2>
+        <p class="cta-sub">El equipo de Impulsy arma la propuesta personalizada y tiene el sistema funcionando en días.</p>
+        <button class="btn-cta" id="btn-final-cta" style="background: var(--primary-blue); box-shadow: 0 6px 20px rgba(37,99,235,0.35);">
+          🎯 Quiero empezar con STHETIC CONTROL
+        </button>
+        <p class="cta-note">El asesor de Impulsy se encargará del resto</p>
+      </div>
+
+      <button class="btn-restart" id="btn-restart">↺ Hacer nuevo diagnóstico</button>
+
+    </div><!-- /results-main -->
+  </div><!-- /results-wrap -->
+</div>
+
+<script>
+  /* ── CONFIG ── */
+  const CONFIG = { dias_semana: 6, semanas_mes: 4.33, meses_anio: 12, horas_jornada: 8 };
+
+  /* ── STATE ── */
+  let currentStep = 0;
+  const TOTAL_STEPS = 5;
+  let trmValue = 4200; // Default TRM, updated from input
+  let currentCountry = 'CO'; // 'CO' o 'MX'
+  let currencyCode = 'COP';
+  let currentPeriod = 'mensual';
+  let acelAdded = false;
+
+  /* ── SCREENS ── */
+  const screens = {
+    intro:     document.getElementById('screen-intro'),
+    questions: document.getElementById('screen-questions'),
+    loading:   document.getElementById('screen-loading'),
+    results:   document.getElementById('screen-results'),
+  };
+
+  function showScreen(name) {
+    Object.values(screens).forEach(el => { el.style.display = 'none'; el.classList.remove('visible'); });
+    if (name === 'questions') screens.questions.style.display = 'flex';
+    else if (name === 'loading') screens.loading.style.display = 'flex';
+    else if (name === 'results') {
+      screens.results.style.display = 'block';
+      void screens.results.offsetWidth;
+      screens.results.classList.add('visible');
+    } else screens.intro.style.display = 'flex';
+  }
+
+  /* ── QUESTIONS FLOW ── */
+  const cards = document.querySelectorAll('.question-card');
+
+  function showStep(index) {
+    cards.forEach((card, i) => {
+      card.classList.remove('active','hidden-below','hidden-above');
+      if (i === index) {
+        card.classList.add('active');
+        setTimeout(() => { const inp = card.querySelector('input'); if (inp) inp.focus(); }, 420);
+      } else if (i < index) {
+        card.classList.add('hidden-above');
+      } else {
+        card.classList.add('hidden-below');
+      }
+    });
+    currentStep = index;
+    updateProgress();
+  }
+
+  function updateProgress() {
+    document.getElementById('progress-fill').style.width = ((currentStep + 1) / TOTAL_STEPS * 100) + '%';
+    document.getElementById('step-counter').textContent = (currentStep + 1) + ' / ' + TOTAL_STEPS;
+    document.getElementById('btn-back').style.display = currentStep === 0 ? 'none' : 'flex';
+  }
+
+  /* ── NUMBER HELPERS ── */
+  const inputIds = ['q-ticket','q-conv','q-perdidos','q-inas','q-horas'];
+  const errorIds = ['err-ticket','err-conv','err-perdidos','err-inas','err-horas'];
+
+  function rawDigits(str) { 
+    if (currentCountry === 'CO') return str.replace(/\./g,'');
+    return str.replace(/,/g,''); 
+  }
+  function parseInput(id) { return parseFloat(rawDigits(document.getElementById(id).value)); }
+
+  function applyThousandFormat(el) {
+    if (el.id === 'trm-input' && currentCountry === 'MX') return;
+    const pos = el.selectionStart;
+    const oldLen = el.value.length;
+    const digits = el.value.replace(/\D/g,'');
+    if (!digits) { el.value = ''; return; }
+    
+    const separator = currentCountry === 'CO' ? '.' : ',';
+    el.value = digits.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+    const diff = el.value.length - oldLen;
+    el.setSelectionRange(pos + diff, pos + diff);
+  }
+
+  /* ── VALIDATION ── */
+  function validateStep(index) {
+    const val   = parseInput(inputIds[index]);
+    const errEl = document.getElementById(errorIds[index]);
+    const inp   = document.getElementById(inputIds[index]);
+    let msg = '';
+    if (index === 0) { if (isNaN(val) || val <= 0) msg = '⚠ Ingresa el valor promedio de una visita'; }
+    else if (index === 1) { if (isNaN(val) || val < 0) msg = '⚠ Debe ser un número mayor o igual a 0'; }
+    else if (index === 2) {
+      const conv = parseInput('q-conv');
+      if (isNaN(val) || val < 0) msg = '⚠ Debe ser un número mayor o igual a 0';
+      else if (!isNaN(conv) && val > conv) msg = '⚠ No puede superar las conversaciones recibidas (' + conv + ')';
+    }
+    else if (index === 3) { if (isNaN(val) || val < 0) msg = '⚠ Debe ser un número mayor o igual a 0'; }
+    else if (index === 4) { if (isNaN(val) || val < 0 || val > 24) msg = '⚠ Debe estar entre 0 y 24 horas'; }
+    if (msg) { inp.classList.add('error'); errEl.textContent = msg; inp.focus(); return false; }
+    inp.classList.remove('error'); errEl.textContent = ''; return true;
+  }
+
+  function nextStep(target) {
+    if (!validateStep(currentStep)) return;
+    if (target === 'done') { startLoading(); return; }
+    showStep(target);
+  }
+
+  /* ── LOADING ── */
+  function startLoading() {
+    showScreen('loading');
+    const steps = document.querySelectorAll('.loader-step');
+    steps.forEach(s => s.classList.remove('active','done'));
+    steps[0].classList.add('active');
+    [0,700,1400,2100,2800].forEach((delay, i) => {
+      setTimeout(() => {
+        if (i > 0) { steps[i-1].classList.remove('active'); steps[i-1].classList.add('done'); }
+        if (i < steps.length) steps[i].classList.add('active');
+      }, delay);
+    });
+    setTimeout(() => {
+      steps[steps.length-1].classList.remove('active');
+      steps[steps.length-1].classList.add('done');
+      setTimeout(() => { buildResults(); showScreen('results'); }, 400);
+    }, 3400);
+  }
+
+  /* ── CALCULATIONS ── */
+  function getInputs() {
+    return {
+      ticket:         parseInput('q-ticket'),
+      conversaciones: parseInput('q-conv'),
+      perdidos:       parseInput('q-perdidos'),
+      inasistencias:  parseInput('q-inas'),
+      horas:          parseInput('q-horas'),
+    };
+  }
+
+  function calcularPerdidas(inp) {
+    const { ticket, perdidos, inasistencias, horas } = inp;
+    const { dias_semana, semanas_mes, meses_anio, horas_jornada } = CONFIG;
+    const perdida_leads   = ticket * perdidos;
+    const perdida_inas    = ticket * inasistencias;
+    const perdida_diaria  = perdida_leads + perdida_inas;
+    const perdida_semanal = perdida_diaria * dias_semana;
+    const perdida_mensual = perdida_semanal * semanas_mes;
+    const perdida_anual   = perdida_mensual * meses_anio;
+    const tiempo_diario   = horas;
+    const tiempo_semanal  = horas * dias_semana;
+    const tiempo_mensual  = tiempo_semanal * semanas_mes;
+    const tiempo_anual    = tiempo_mensual * meses_anio;
+    const wd_mensual      = tiempo_mensual / horas_jornada;
+    const wd_anual        = tiempo_anual / horas_jornada;
+    const wd_semanas      = wd_anual / 5;
+    return {
+      dinero:   { perdida_leads, perdida_inas, perdida_diaria, perdida_semanal, perdida_mensual, perdida_anual },
+      tiempo:   { tiempo_diario, tiempo_semanal, tiempo_mensual, tiempo_anual },
+      workdays: { wd_mensual, wd_anual, wd_semanas },
+    };
+  }
+
+  /* ── FORMATTERS ── */
+  /* ── FORMATTERS ── */
+  function formatMoney(v) { 
+    return '$' + Math.round(v).toLocaleString(currentCountry === 'CO' ? 'es-CO' : 'es-MX'); 
+  }
+  function formatHours(h) { const r = Math.round(h*10)/10; return (r%1===0?r:r.toFixed(1))+'h'; }
+
+  /* ── ANIMATED COUNTER ── */
+  function animateValue(id, end, formatter, duration) {
+    duration = duration || 900;
+    const el = document.getElementById(id);
+    if (!el) return;
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatter(end * e);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = formatter(end);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ── PRICING DATA ── */
+  const PRICING_TABLE = {
+    mensual: {
+      core: { setup: 400, total: 129, months: 1 },
+      flow: { setup: 650, total: 250, months: 1 },
+      acel: { setup: 300, total: 99,  months: 1 }
+    },
+    trimestral: {
+      core: { setup: 350, total: 375,  months: 3 },
+      flow: { setup: 500, total: 720,  months: 3 },
+      acel: { setup: 300, total: 297,  months: 3 } // 99 * 3
+    },
+    semestral: {
+      core: { setup: 350, total: 719,  months: 6 },
+      flow: { setup: 400, total: 1380, months: 6 },
+      acel: { setup: 300, total: 594,  months: 6 } // 99 * 6
+    },
+    anual: {
+      core: { setup: 350, total: 1369, months: 12 },
+      flow: { setup: 350, total: 2520, months: 12 },
+      acel: { setup: 300, total: 1188, months: 12 } // 99 * 12
+    }
+  };
+
+  /* ── BUILD PLAN CARDS ── */
+  function buildPlanCards(ticket, trm) {
+    if (!ticket || ticket <= 0 || !trm || trm <= 0) return;
+
+    const pricing = PRICING_TABLE[currentPeriod];
+    
+    // Labels for the period
+    const periodLabels = { mensual: 'mes', trimestral: 'trimestre', semestral: 'semestre', anual: 'año' };
+    const label = periodLabels[currentPeriod];
+
+    // Prices for AI if added
+    const acelMonthlyUSD = pricing.acel.total / pricing.acel.months;
+    const acelSetupUSD = pricing.acel.setup;
+    const acelTotalUSD = pricing.acel.total;
+
+    // Equivalent monthly price in USD for ROI and display
+    let coreUSDMonthly = pricing.core.total / pricing.core.months;
+    let flowUSDMonthly = pricing.flow.total / pricing.flow.months;
+
+    // Totals for the period
+    let coreTotalUSD = pricing.core.total;
+    let flowTotalUSD = pricing.flow.total;
+
+    // Setups
+    let coreSetupUSD = pricing.core.setup;
+    let flowSetupUSD = pricing.flow.setup;
+
+    if (acelAdded) {
+      coreUSDMonthly += acelMonthlyUSD;
+      flowUSDMonthly += acelMonthlyUSD;
+      coreTotalUSD += acelTotalUSD;
+      flowTotalUSD += acelTotalUSD;
+      coreSetupUSD += acelSetupUSD;
+      flowSetupUSD += acelSetupUSD;
+    }
+
+    // Monthly price in local currency
+    const coreLocal = Math.round(coreUSDMonthly * trm);
+    const flowLocal = Math.round(flowUSDMonthly * trm);
+
+    // Update UI Prices in USD
+    const coreUSDContainer = document.querySelector('.plan-card:not(.featured) .plan-price-usd');
+    const flowUSDContainer = document.querySelector('.plan-card.featured .plan-price-usd');
+
+    if (currentPeriod === 'mensual') {
+      if (coreUSDContainer) coreUSDContainer.innerHTML = `$${Math.round(coreTotalUSD)} <span>USD / mes</span>`;
+      if (flowUSDContainer) flowUSDContainer.innerHTML = `$${Math.round(flowTotalUSD)} <span>USD / mes</span>`;
+    } else {
+      if (coreUSDContainer) coreUSDContainer.innerHTML = `<span>Total ${label}:</span> $${Math.round(coreTotalUSD)} <span>USD</span>`;
+      if (flowUSDContainer) flowUSDContainer.innerHTML = `<span>Total ${label}:</span> $${Math.round(flowTotalUSD)} <span>USD</span>`;
+    }
+
+    document.getElementById('core-cop').textContent = '≈ ' + formatMoney(coreLocal) + ' / mes';
+    document.getElementById('flow-cop').textContent = '≈ ' + formatMoney(flowLocal) + ' / mes';
+
+    // Update Setup Fees
+    document.getElementById('setup-core').textContent = `Setup: $${coreSetupUSD} USD (≈ ${formatMoney(coreSetupUSD * trm)})`;
+    document.getElementById('setup-flow').textContent = `Setup: $${flowSetupUSD} USD (≈ ${formatMoney(flowSetupUSD * trm)})`;
+    
+    // Update Acel Card Visuals
+    const acelCard = document.getElementById('acel-card');
+    const acelBadge = document.getElementById('acel-badge');
+    const acelBtn = document.getElementById('btn-toggle-acel');
+    
+    if (acelAdded) {
+      acelCard.classList.add('selected');
+      if (acelBadge) acelBadge.innerHTML = '✅ Adicionado al plan';
+      if (acelBtn) acelBtn.innerHTML = '➖ Quitar Acelerador';
+    } else {
+      acelCard.classList.remove('selected');
+      if (acelBadge) acelBadge.innerHTML = '➕ Add-on opcional';
+      if (acelBtn) acelBtn.innerHTML = '➕ Adicionar al Plan';
+    }
+
+    const setupAcelUI = document.getElementById('setup-acel');
+    if (setupAcelUI) {
+      setupAcelUI.innerHTML = `⚡ <strong>Acelerador IA</strong> — Setup de <strong>$${pricing.acel.setup} USD</strong> (≈ ${formatMoney(pricing.acel.setup * trm)}).`;
+    }
+
+    // ROI: citas needed to cover monthly cost
+    const coreROI = Math.ceil(coreLocal / ticket);
+    const flowROI = Math.ceil(flowLocal / ticket);
+
+    document.getElementById('core-roi').textContent = coreROI;
+    document.getElementById('flow-roi').textContent = flowROI;
+
+    const acelROIVal = Math.ceil((acelMonthlyUSD * trm) / ticket);
+    const acelROILabel = document.getElementById('acelerador-roi');
+    if (acelROILabel) acelROILabel.textContent = '+ solo ' + acelROIVal + ' citas más';
+
+    // Ticket reference in ROI header
+    document.getElementById('roi-ticket-ref').textContent = formatMoney(ticket);
+  }
+
+  /* ── BUILD RESULTS ── */
+  function buildResults() {
+    const inp = getInputs();
+
+    // Sidebar resumen
+    document.getElementById('s-trm').textContent   = '$' + Math.round(trmValue).toLocaleString(currentCountry === 'CO' ? 'es-CO' : 'es-MX');
+    const trmItemLabel = document.querySelector('.summary-item.trm-item .si-label');
+    if (trmItemLabel) trmItemLabel.textContent = currentCountry === 'CO' ? 'TRM hoy' : 'Tipo de Cambio hoy';
+
+    document.getElementById('s-ticket').innerHTML  = formatMoney(inp.ticket);
+    document.getElementById('s-conv').innerHTML    = inp.conversaciones + '<span class="si-unit">conversaciones</span>';
+    document.getElementById('s-perdidos').innerHTML= inp.perdidos + '<span class="si-unit">leads / día</span>';
+    document.getElementById('s-inas').innerHTML    = inp.inasistencias + '<span class="si-unit">inasistencias</span>';
+    document.getElementById('s-horas').innerHTML   = inp.horas + '<span class="si-unit">horas / día</span>';
+
+    const r = calcularPerdidas(inp);
+    const { dinero } = r;
+
+    // Anual — protagonista
+    animateValue('r-anual-dinero', dinero.perdida_anual,   formatMoney, 1100);
+    // Mensual + desglose mensual
+    animateValue('c-mensual',      dinero.perdida_mensual, formatMoney, 900);
+    animateValue('c-leads',        dinero.perdida_leads * CONFIG.dias_semana * CONFIG.semanas_mes, formatMoney, 800);
+    animateValue('c-inas',         dinero.perdida_inas  * CONFIG.dias_semana * CONFIG.semanas_mes, formatMoney, 800);
+
+    // Plan ROI cards
+    buildPlanCards(inp.ticket, trmValue);
+  }
+
+  /* ── RESTART ── */
+  function restart() {
+    inputIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('error'); }
+    });
+    errorIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '';
+    });
+    // Reset TRM input
+    const trmEl = document.getElementById('trm-input');
+    if (trmEl) trmEl.value = '';
+    document.getElementById('trm-wrap').classList.remove('error');
+    document.getElementById('trm-error').textContent = '';
+    trmValue = 4200;
+    currentPeriod = 'mensual';
+    
+    // Reset buttons
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.period-btn[data-period="mensual"]').classList.add('active');
+
+    // Reset modules
+    document.getElementById('proposal-module').style.display = 'none';
+    document.getElementById('cta-initial').style.display = 'block';
+    document.getElementById('cta-final').style.display = 'none';
+
+    showStep(0);
+    screens.intro.classList.remove('exit');
+    showScreen('intro');
+  }
+
+  /* ── EVENT LISTENERS ── */
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // TRM input formatting + validation
+    const trmInput = document.getElementById('trm-input');
+    const trmWrap  = document.getElementById('trm-wrap');
+    const trmError = document.getElementById('trm-error');
+
+    trmInput.addEventListener('input', function () {
+      applyThousandFormat(trmInput);
+      trmWrap.classList.remove('error');
+      trmError.textContent = '';
+    });
+    trmInput.addEventListener('keydown', function (e) {
+      const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End','.',','];
+      if (allowed.includes(e.key)) return;
+      if (/^\d$/.test(e.key)) return;
+      e.preventDefault();
+    });
+
+    // Country buttons
+    document.querySelectorAll('.country-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentCountry = this.getAttribute('data-country');
+        
+        const trmLabel = document.getElementById('trm-label');
+        const trmCurr  = document.getElementById('trm-currency');
+        const trmInput = document.getElementById('trm-input');
+
+        if (currentCountry === 'CO') {
+          trmLabel.textContent = '💱 TRM — Valor del dólar hoy';
+          trmCurr.textContent = 'COP';
+          trmInput.placeholder = '4.200';
+          currencyCode = 'COP';
+        } else {
+          trmLabel.textContent = '💱 Tipo de Cambio — Valor del dólar hoy';
+          trmCurr.textContent = 'MXN';
+          trmInput.placeholder = '18.50';
+          currencyCode = 'MXN';
+        }
+        trmInput.value = '';
+      });
+    });
+
+    // Start button — validate TRM first
+    document.getElementById('btn-start').addEventListener('click', function () {
+      const valStr = trmInput.value.replace(',','.');
+      const raw = currentCountry === 'CO' ? parseFloat(valStr.replace(/\./g,'')) : parseFloat(valStr);
+      if (isNaN(raw) || raw <= 0) {
+        trmWrap.classList.add('error');
+        trmError.textContent = '⚠ Ingresa el valor del dólar de hoy para continuar';
+        trmInput.focus();
+        return;
+      }
+      trmValue = raw;
+      screens.intro.classList.add('exit');
+      setTimeout(function () { showScreen('questions'); showStep(0); }, 500);
+    });
+
+    document.querySelectorAll('.btn-next').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const t = btn.getAttribute('data-next');
+        nextStep(t === 'done' ? 'done' : parseInt(t));
+      });
+    });
+
+    document.getElementById('btn-back').addEventListener('click', function () {
+      if (currentStep > 0) showStep(currentStep - 1);
+    });
+
+    inputIds.forEach(function (id, i) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', function () {
+        el.classList.remove('error');
+        const errEl = document.getElementById(errorIds[i]);
+        if (errEl) errEl.textContent = '';
+        if (id !== 'q-horas') applyThousandFormat(el);
+      });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (i < TOTAL_STEPS - 1) nextStep(i + 1); else nextStep('done');
+          return;
+        }
+        const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+        if (allowed.includes(e.key)) return;
+        if (/^\d$/.test(e.key)) return;
+        if (id === 'q-horas' && (e.key === '.' || e.key === ',')) return;
+        e.preventDefault();
+      });
+    });
+
+    document.getElementById('btn-restart').addEventListener('click', restart);
+
+    // Toggle Acelerador
+    document.getElementById('btn-toggle-acel').addEventListener('click', function() {
+      acelAdded = !acelAdded;
+      const inp = getInputs();
+      buildPlanCards(inp.ticket, trmValue);
+    });
+
+    // Period buttons
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentPeriod = this.getAttribute('data-period');
+        const inp = getInputs();
+        buildPlanCards(inp.ticket, trmValue);
+      });
+    });
+
+    // Show plans transition
+    document.getElementById('btn-show-plans').addEventListener('click', function() {
+      const proposalMod = document.getElementById('proposal-module');
+      const ctaInitial  = document.getElementById('cta-initial');
+      const ctaFinal    = document.getElementById('cta-final');
+
+      proposalMod.style.display = 'block';
+      ctaInitial.style.display = 'none';
+      ctaFinal.style.display = 'block';
+
+      // Scroll to plans
+      proposalMod.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Final CTA
+    document.getElementById('btn-final-cta').addEventListener('click', function() {
+      alert('🚀 ¡Excelente decisión!\n\nEl equipo de Impulsy ha recibido tu diagnóstico y se pondrá en contacto para activar tu sistema.');
+    });
+
+    document.getElementById('btn-back').style.display = 'none';
+  });
+</script>
+</body>
+</html>
