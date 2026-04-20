@@ -868,16 +868,27 @@
       border-width: 2px;
     }
     .plan-card.premium {
-      border-color: #1E3A8A; /* Azul más oscuro */
+      background: #1E3A8A; /* Azul oscuro */
+      border-color: #1E3A8A;
       border-width: 2.5px;
+      color: #FFFFFF; /* Texto blanco para legibilidad */
+    }
+    .plan-card.premium .plan-price-usd,
+    .plan-card.premium .plan-price-cop,
+    .plan-card.premium .plan-features-list li,
+    .plan-card.premium .plan-setup-label {
+      color: #FFFFFF;
+    }
+    .plan-card.premium .plan-price-usd span {
+      color: rgba(255, 255, 255, 0.8);
     }
     .plan-card.premium .plan-recommended {
-      background: #1E3A8A;
+      background: #3B82F6; /* Azul más brillante para que resalte sobre el fondo oscuro */
     }
     .plan-card.premium .plan-name-badge {
-      background: #DBEAFE;
-      border-color: #93C5FD;
-      color: #1E3A8A;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
     }
 
     .plan-recommended {
