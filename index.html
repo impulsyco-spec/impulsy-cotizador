@@ -35,6 +35,12 @@
       --radius:     12px;
       --radius-lg:  18px;
       --radius-xl:  24px;
+      
+      /* Flow Plan Premium Tokens */
+      --flow-indigo:       #4F46E5;
+      --flow-indigo-soft:  #6366F1;
+      --flow-indigo-pale:  #EEF2FF;
+      --flow-indigo-border:#C7D2FE;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -861,6 +867,22 @@
       border-color: var(--primary-blue);
       border-width: 2px;
     }
+    .plan-card.premium {
+      border-color: var(--flow-indigo);
+      border-width: 2.5px;
+      background: linear-gradient(to bottom, #fff, var(--flow-indigo-pale));
+    }
+    .plan-card.premium .plan-recommended {
+      background: var(--flow-indigo);
+    }
+    .plan-card.premium .plan-name-badge {
+      background: #E0E7FF;
+      border-color: #A5B4FC;
+      color: var(--flow-indigo);
+    }
+    .plan-card.premium .plan-roi-number {
+      color: var(--flow-indigo);
+    }
 
     .plan-recommended {
       position: absolute;
@@ -1475,7 +1497,7 @@
           </div>
 
           <!-- FLOW -->
-          <div class="plan-card featured">
+          <div class="plan-card featured premium">
             <div class="plan-recommended">⭐ Más completo</div>
             <div class="plan-name-badge">FLOW</div>
             <div class="plan-price-usd">$250 <span>USD / mes</span></div>
@@ -1486,11 +1508,14 @@
               <div class="plan-roi-desc">citas al mes son suficientes</div>
             </div>
             <ul class="plan-features-list">
-              <li>Todo lo del plan CORE</li>
-              <li>Automatizaciones avanzadas a medida</li>
-              <li>Campañas de reactivación masiva</li>
-              <li>Reportes y métricas avanzadas</li>
-              <li>Soporte prioritario</li>
+              <li>configuración de la segunda sede</li>
+              <li>ampliación de calendarios hasta el rango de FLOW</li>
+              <li>configuración del flujo automático de seguimiento a leads calientes no respondidos</li>
+              <li>configuración del flujo automático de solicitud de reseñas post-cita</li>
+              <li>configuración del flujo de recordatorios para re-agendamiento según frecuencia de visita</li>
+              <li>configuración del flujo de recuperación de no-show</li>
+              <li>configuración del dashboard de métricas de citas, seguimiento y reactivación</li>
+              <li>ajuste de permisos y estructura operativa para el alcance FLOW</li>
             </ul>
             <div class="plan-setup">
               <span class="plan-setup-label">Implementación</span>
